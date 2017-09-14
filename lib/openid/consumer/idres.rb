@@ -3,6 +3,7 @@ require "openid/protocolerror"
 require "openid/kvpost"
 require "openid/consumer/discovery"
 require "openid/urinorm"
+require 'rails'
 
 module OpenID
   class TypeURIMismatch < ProtocolError
@@ -196,6 +197,8 @@ module OpenID
 
         [:scheme, :host, :port, :path].each do |meth|
           if msg_return_to.send(meth) != app_parsed.send(meth)
+            Rails.logger.info "Returned message path #{msg_return_to.send(:path)}"
+            Rails.logger.info "Parsed message path #{app_parsed.send(meth)}"
             raise ProtocolError, "return_to #{meth.to_s} does not match"
           end
         end
